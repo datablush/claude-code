@@ -34,6 +34,21 @@ claude plugin marketplace add datablush/claude-code
 claude plugin install datablush@datablush
 ```
 
+## Releasing
+
+1. Change the plugin here (a normal PR to the monorepo).
+2. Raise `version` in `plugin/.claude-plugin/plugin.json` **and** `.claude-plugin/marketplace.json` (the same
+   number). Claude Code updates a plugin when its version changes, so a change under the same version never reaches
+   users; publishing refuses it.
+3. Merge. `.github/workflows/publish-plugin.yml` publishes this folder to `datablush/claude-code` as one commit.
+
+Users update with `claude plugin marketplace update datablush` and `claude plugin update datablush@datablush`, then
+start a new session. (Changes to the MCP server's tools need no plugin release: they ship with the API.)
+
+The workflow pushes with the `PLUGIN_REPO_TOKEN` secret: a fine-grained token with access to `datablush/claude-code`
+only, and Contents: Read and write. Until that secret exists, the workflow skips with a warning and the plugin is
+published by hand (the same files, as one commit to `datablush/claude-code`).
+
 ## Develop
 
 Load it from this folder for one session, pointed at a local API:

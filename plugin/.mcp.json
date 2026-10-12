@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "datablush": {
+      "type": "http",
+      "url": "${DATABLUSH_MCP_URL:-https://api-dev.datablush.com/mcp}"
+    }
+  }
+}

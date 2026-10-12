@@ -1,0 +1,13 @@
+{
+  "name": "datablush",
+  "owner": { "name": "Datablush", "email": "hello@datablush.com" },
+  "description": "Datablush for Claude Code",
+  "plugins": [
+    {
+      "name": "datablush",
+      "source": "./plugin",
+      "description": "Your team's rules, plans, questions and work log, in Claude Code.",
+      "version": "0.1.0"
+    }
+  ]
+}

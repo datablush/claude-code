@@ -1,0 +1,8 @@
+{
+  "name": "datablush",
+  "displayName": "Datablush",
+  "version": "0.1.0",
+  "description": "Your team's rules, plans, questions and work log, in Claude Code: /datablush:work picks up a task, plans it, gets it approved and builds it, logging what it does.",
+  "author": { "name": "Datablush", "email": "hello@datablush.com" },
+  "homepage": "https://datablush.com"
+}

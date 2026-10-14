@@ -13,16 +13,19 @@ A Claude Code plugin: it connects Datablush, adds `/datablush:work`, and keeps e
 | `plugin/commands/check.md` | `/datablush:check`: the implementer checks the work against the acceptance criteria, plan, decisions and rules, confirms it, and only then the pull request is opened (with the evidence in its description). |
 | `plugin/commands/review.md` | `/datablush:review GEN-42`: for PR reviewers only (Datablush refuses everyone else, and their own work): reviews the pull request against its criteria, plan, decisions, rules and best practices. |
 | `plugin/commands/idea.md` | `/datablush:idea retry failed pages`: saves a thought to your private Ideas, for later (agents never act on ideas on their own). |
+| `plugin/commands/connect.md` | `/datablush:connect`: connects this computer (once) so Spec Kit specs sync by themselves, through `scripts/datablush.sh`. |
 | `plugin/commands/work.md` | `/datablush:work [GEN-42 \| "fix the button colour" \| nothing]`: start or create the task, ask first and record decisions, plan and get it approved, build, log the work. |
-| `plugin/hooks/hooks.json` | Reminders at the right moments, so logging doesn't depend on the agent remembering. |
+| `plugin/hooks/hooks.json` | Reminders at the right moments, so logging doesn't depend on the agent remembering; Spec Kit specs synced when Claude finishes. |
+| `plugin/scripts/datablush.sh` | The sync script: `login` (a code to allow in Datablush), `sync`, `gate`, `status`, `logout`. Uploads spec files straight from disk, so Claude spends no tokens on them. The same file ships in the Spec Kit extension (`integrations/spec-kit`). |
 
-The hooks never call Datablush themselves (they have no sign-in); they tell Claude what to log, and Claude logs it
-through the Datablush tools:
+The hooks tell Claude what to log, and Claude logs it through the Datablush tools. The one exception is Spec Kit
+files: once the computer is connected (`/datablush:connect`), the Stop hook sends them itself with the sync script.
 
-- **SessionStart**: read the team's rules (`get_rules` with this repo); if the branch is for a task (`gen-42-…`), say so. Right after a compaction, check the discussion kept everything decided.
+- **SessionStart**: read the team's rules (`get_rules` with this repo); if the branch is for a task (`gen-42-…`), say so. In a Spec Kit repository, say how its specs reach Datablush. Right after a compaction, check the discussion kept everything decided.
+- **Before a prompt**: remember the Spec Kit command being run (`/speckit-plan`…), for the sync.
 - **After a shell command**: a commit, a test run or `gh pr create` → log it on the branch's task.
 - **After edits**: remember the files changed.
-- **Stop**: on a task branch with edits not yet logged, one reminder to log the files and a summary (never twice in a row).
+- **Stop**: Spec Kit files Claude changed go to Datablush (or, not connected yet, a reminder to send them with `sync_spec`), with anything that needs doing next (the plan to submit, answers and ticks from Datablush); on a task branch with edits not yet logged, one reminder to log the files and a summary. Never twice in a row.
 
 ## Install
 
